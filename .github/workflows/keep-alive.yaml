@@ -1,0 +1,14 @@
+name: Keep Render Alive
+
+on:
+  schedule:
+    - cron: '*/10 * * * *' # Har 10 minutes me run hoga
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Ping to Backend
+        run: |
+          curl -I https://tumhara-render-backend-url.onrender.com/
