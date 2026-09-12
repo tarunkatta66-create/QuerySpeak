@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+pydantic-settings
+sqlalchemy[asyncio]
+alembic
+aiomysql
+pymysql
+python-jose
+passlib[bcrypt]
+redis
+loguru
+sqlglot
+langchain
+sentence-transformers
+faker
+tabulate

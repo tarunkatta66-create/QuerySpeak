@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-background: #FAF8F3;
+    --color-surface: #FFFFFF;
+    --color-border: #EAE3D3;
+    --color-ink: #14213D;
+  }
+
+  .dark {
+    --color-background: #1B1024;
+    --color-surface: #241531;
+    --color-border: #3A234C;
+    --color-ink: #F4E9FF;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--color-ink);
+    background-color: var(--color-background);
+  }
+}

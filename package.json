@@ -1,0 +1,7 @@
+{
+  "name": "queryspeak",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm --filter web dev"
+  }
+}
