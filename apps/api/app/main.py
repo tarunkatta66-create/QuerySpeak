@@ -7,10 +7,15 @@ from app.api.v1.routers import auth, health, query
 
 app = FastAPI(title="QuerySpeak API", version="1.0.0")
 
-# CORS middleware allowing Vite dev server
+# CORS middleware allowing local dev and Vercel production/preview deployments
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://queryspeak-ai.vercel.app",
+    ],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
