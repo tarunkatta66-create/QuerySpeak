@@ -5,7 +5,7 @@ from app.api.v1.routers import auth, health, query
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
-# CORS setup
+# Set CORS middleware to allow Vercel frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://queryspeak-ai.vercel.app", "http://localhost:5173"],
@@ -14,7 +14,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Crucial: Ye lines routers ko active karti hain
+# Include all API v1 routers with proper prefix
 app.include_router(health.router, prefix="/health", tags=["health"])
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
 app.include_router(query.router, prefix="/api/v1/query", tags=["query"])
