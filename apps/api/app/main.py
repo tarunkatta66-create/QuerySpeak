@@ -1,23 +1,24 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
-from app.core.database import engine
-from app.models import base  # import your models Base
+from app.api.v1.routers import auth, health, query
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
-# Set CORS middleware
-if settings.BACKEND_CORS_ORIGINS:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+# Setup CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://queryspeak-ai.vercel.app", "http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# Auto create DB tables on startup
-@app.on_event("startup")
-async def startup():
-    async with engine.begin() as conn:
-        await conn.run_sync(base.Base.metadata.create_all)
+# Routers
+app.include_router(health.router, prefix="/health", tags=["health"])
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["auth"])
+app.include_router(query.router, prefix="/api/v1/query", tags=["query"])
+
+@app.get("/")
+def root():
+    return {"message": "QuerySpeak API is running"}
