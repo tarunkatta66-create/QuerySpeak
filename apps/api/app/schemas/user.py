@@ -1,23 +1,19 @@
-from datetime import datetime
-from typing import Optional
-from pydantic import BaseModel, EmailStr, ConfigDict
-
+from pydantic import BaseModel, EmailStr
 
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-    full_name: Optional[str] = None
+    full_name: str | None = None
 
-
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
-
-
-class UserOut(BaseModel):
+class UserResponse(BaseModel):
     id: int
     email: EmailStr
-    full_name: Optional[str] = None
-    created_at: datetime
+    full_name: str | None = None
+    is_active: bool
 
-    model_config = ConfigDict(from_attributes=True)
+    class Config:
+        from_attributes = True
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
