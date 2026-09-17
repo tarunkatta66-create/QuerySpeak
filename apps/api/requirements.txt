@@ -4,7 +4,7 @@ pydantic-settings
 sqlalchemy[asyncio]
 alembic
 aiomysql
-pymysql
+pymysql==1.0.3
 python-jose
 passlib[bcrypt]
 redis
