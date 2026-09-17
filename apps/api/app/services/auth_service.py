@@ -14,9 +14,16 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
+async def get_user_by_id(db: AsyncSession, user_id: int):
+    result = await db.execute(select(User).where(User.id == user_id))
+    return result.scalars().first()
+
+async def get_user_by_email(db: AsyncSession, email: str):
+    result = await db.execute(select(User).where(User.email == email))
+    return result.scalars().first()
+
 async def register_user(db: AsyncSession, user_in: UserCreate):
-    result = await db.execute(select(User).where(User.email == user_in.email))
-    existing_user = result.scalars().first()
+    existing_user = await get_user_by_email(db, user_in.email)
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -35,8 +42,7 @@ async def register_user(db: AsyncSession, user_in: UserCreate):
     return new_user
 
 async def authenticate_user(db: AsyncSession, email: str, password: str):
-    result = await db.execute(select(User).where(User.email == email))
-    user = result.scalars().first()
+    user = await get_user_by_email(db, email)
     if not user or not verify_password(password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
