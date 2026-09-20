@@ -1,14 +1,15 @@
-name: Keep Render Alive
+name: Keep Alive Render and Aiven
 
 on:
   schedule:
-    - cron: '*/10 * * * *' # Har 10 minutes me run hoga
-  workflow_dispatch:
+    # Har 10 minute me auto-run hoga
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Manual run button for testing
 
 jobs:
-  ping:
+  ping-service:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Ping to Backend
+      - name: Ping Render Backend Health Endpoint
         run: |
-          curl -I https://tumhara-render-backend-url.onrender.com/
+          curl -s https://queryspeak-api.onrender.com/health
