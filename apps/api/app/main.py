@@ -21,7 +21,10 @@ app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://queryspeak-ai.vercel.app", "http://localhost:5173", "*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://query-speak.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
