@@ -12,7 +12,8 @@ from app.schemas.query import QueryGenerateRequest, QueryGenerateResponse
 from app.services.llm_service import generate_sql_query
 from app.services.validator_service import validate_sql
 
-router = APIRouter(prefix="/query", tags=["Query Engine"])
+# FIXED: Removed prefix="/query" to avoid double-prefixing (/api/v1/query/query/generate)
+router = APIRouter(tags=["Query Engine"])
 
 READONLY_DB_URL = os.getenv(
     "READONLY_DEMO_DB_URL",
