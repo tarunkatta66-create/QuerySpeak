@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+pydantic-settings
+sqlalchemy[asyncio]
+alembic
+aiomysql
+pymysql==1.0.3
+python-jose
+bcrypt
+redis
+loguru
+sqlglot
+langchain
+sentence-transformers
+faker
+tabulate
+email-validator

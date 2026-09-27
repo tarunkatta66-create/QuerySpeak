@@ -1,0 +1,15 @@
+name: Keep Alive Render and Aiven
+
+on:
+  schedule:
+    # Har 10 minute me auto-run hoga
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Manual run button for testing
+
+jobs:
+  ping-service:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Backend Health Endpoint
+        run: |
+          curl -s https://queryspeak-api.onrender.com/health
