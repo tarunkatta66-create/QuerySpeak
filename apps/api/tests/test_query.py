@@ -55,7 +55,11 @@ async def test_query_generate_endpoint_requires_auth():
 
 
 @pytest.mark.asyncio
-async def test_query_generate_endpoint_with_auth():
+async def test_query_generate_endpoint_with_auth(monkeypatch):
+    class MockGeminiResponse:
+        text = "SELECT c.full_name AS customer_name, COUNT(o.id) AS total_orders, SUM(oi.quantity * oi.unit_price) AS total_revenue FROM customers c JOIN orders o ON c.id = o.customer_id JOIN order_items oi ON o.id = oi.order_id GROUP BY c.id, c.full_name ORDER BY total_revenue DESC LIMIT 5;"
+
+    monkeypatch.setattr("google.generativeai.GenerativeModel.generate_content", lambda self, *args, **kwargs: MockGeminiResponse())
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         # Register & Login
         await client.post(

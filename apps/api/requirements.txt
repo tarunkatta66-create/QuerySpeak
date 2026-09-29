@@ -15,3 +15,4 @@ sentence-transformers
 faker
 tabulate
 email-validator
+google-generativeai

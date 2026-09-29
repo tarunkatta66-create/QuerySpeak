@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "QuerySpeak"
     DATABASE_URL: str
     SECRET_KEY: str
+    GEMINI_API_KEY: str
     BACKEND_CORS_ORIGINS: List[str] = ["https://query-speak.vercel.app", "http://localhost:5173"]
 
     class Config:
