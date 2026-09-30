@@ -16,9 +16,9 @@ from app.services.validator_service import validate_sql
 # FIXED: Removed prefix="/query" to avoid double-prefixing (/api/v1/query/query/generate)
 router = APIRouter(tags=["Query Engine"])
 
-READONLY_DB_URL = os.getenv(
-    "READONLY_DEMO_DB_URL",
-    "mysql+pymysql://root:rootpassword@localhost:3306/queryspeak_demo_shop"
+READONLY_DB_ENV = os.getenv("READONLY_DEMO_DB_URL") or os.getenv("DEMO_DATABASE_URL")
+READONLY_DB_URL = (
+    READONLY_DB_ENV or "mysql+pymysql://root:rootpassword@localhost:3306/queryspeak_demo_shop"
 )
 
 # Mock table rows for demonstration if MySQL is unreachable
@@ -41,14 +41,20 @@ class QueryExecuteRequest(BaseModel):
 def execute_sql_readonly(sql: str) -> tuple[List[str], List[Dict[str, Any]], int]:
     start_time = time.time()
     try:
-        engine = create_engine(READONLY_DB_URL, connect_args={"connect_timeout": 3})
+        engine = create_engine(
+            READONLY_DB_URL,
+            connect_args={"connect_timeout": 3, "ssl": {"ssl": {}}}
+        )
         with engine.connect() as conn:
             result = conn.execute(text(sql))
             columns = list(result.keys())
             rows = [dict(zip(columns, row)) for row in result.fetchall()]
             elapsed_ms = int((time.time() - start_time) * 1000)
             return columns, rows, elapsed_ms
-    except Exception:
+    except Exception as e:
+        if READONLY_DB_ENV:
+            print(f"DEMO DB EXECUTION ERROR: {repr(e)}")
+            raise e
         elapsed_ms = int((time.time() - start_time) * 1000)
         return MOCK_RESULT_DATA["columns"], MOCK_RESULT_DATA["rows"], elapsed_ms
 

@@ -34,13 +34,14 @@ def generate_sql_query(prompt: str) -> Tuple[str, str]:
 
     try:
         genai.configure(api_key=settings.GEMINI_API_KEY)
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        model = genai.GenerativeModel("gemini-3.8-flash")
         response = model.generate_content(
             full_prompt,
             generation_config=genai.GenerationConfig(temperature=0),
         )
         raw_output = response.text
     except Exception as exc:
+        print(f"GEMINI ERROR DETAIL: {repr(exc)}")
         raise ValueError("SQL generation service is temporarily unavailable. Please try again.") from exc
 
     sql_text = raw_output.strip()

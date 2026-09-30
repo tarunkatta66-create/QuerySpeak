@@ -50,7 +50,14 @@ CATEGORY_NAMES = [
 def seed_database():
     print(f"Connecting to MySQL at {HOST}:{PORT}...")
     # Connect without database first to ensure DB exists
-    conn = pymysql.connect(host=HOST, port=PORT, user=USER, password=PASSWORD, autocommit=True)
+    conn = pymysql.connect(
+        host=HOST,
+        port=PORT,
+        user=USER,
+        password=PASSWORD,
+        autocommit=True,
+        ssl={"ssl": {}}
+    )
     with conn.cursor() as cursor:
         cursor.execute(f"CREATE DATABASE IF NOT EXISTS {DB_NAME};")
     conn.close()
@@ -62,7 +69,8 @@ def seed_database():
         user=USER,
         password=PASSWORD,
         database=DB_NAME,
-        autocommit=False
+        autocommit=False,
+        ssl={"ssl": {}}
     )
     cursor = conn.cursor()
 

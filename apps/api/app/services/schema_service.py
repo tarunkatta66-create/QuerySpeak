@@ -3,9 +3,9 @@ import os
 from sqlalchemy import create_engine, inspect
 
 
-DEMO_DB_URL = os.getenv(
-    "DEMO_DATABASE_URL",
-    "mysql+pymysql://root:rootpassword@localhost:3306/queryspeak_demo_shop"
+DEMO_DB_ENV = os.getenv("DEMO_DATABASE_URL") or os.getenv("READONLY_DEMO_DB_URL")
+DEMO_DB_URL = (
+    DEMO_DB_ENV or "mysql+pymysql://root:rootpassword@localhost:3306/queryspeak_demo_shop"
 )
 
 # Mock schema fallback if MySQL database connection is offline during development/testing
@@ -20,7 +20,10 @@ FALLBACK_SCHEMA = {
 
 def introspect_schema() -> Dict[str, List[str]]:
     try:
-        engine = create_engine(DEMO_DB_URL, connect_args={"connect_timeout": 3})
+        engine = create_engine(
+            DEMO_DB_URL,
+            connect_args={"connect_timeout": 3, "ssl": {"ssl": {}}}
+        )
         inspector = inspect(engine)
         table_names = inspector.get_table_names()
 
@@ -50,7 +53,10 @@ def introspect_schema() -> Dict[str, List[str]]:
             schema_info[table] = col_defs
 
         return schema_info
-    except Exception:
+    except Exception as e:
+        if DEMO_DB_ENV:
+            print(f"SCHEMA INTROSPECTION ERROR: {repr(e)}")
+            raise e
         return FALLBACK_SCHEMA
 
 
